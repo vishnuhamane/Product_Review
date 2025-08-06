@@ -1,0 +1,43 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f9f9f9;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+.container {
+  width: 80%;
+  margin: 30px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ccc;
+}
+select, button {
+  display: block;
+  margin: 10px 0;
+  padding: 8px 10px;
+  width: 100%;
+  font-size: 1em;
+}
+button {
+  cursor: pointer;
+  background-color: #008cba;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+button:hover {
+  background-color: #005f6b;
+}
+#reviews-container button {
+  width: 100%;
+  text-align: left;
+  margin: 5px 0;
+}
+#selected-review-box {
+  background: #e0ffe0;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 20px;
+}

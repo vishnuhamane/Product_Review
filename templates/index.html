@@ -1,0 +1,83 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Product Review Generator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="container">
+    <h1>🛍️ AI Product Review Generator</h1>
+    
+    <label for="category">Select Category:</label>
+    <select id="category" onchange="loadProducts()">
+      <option value="" disabled selected>Choose category</option>
+      {% for cat in categories %}
+        <option value="{{ cat }}">{{ cat }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="product">Select Product:</label>
+    <select id="product">
+      <option value="" disabled selected>Choose product</option>
+    </select>
+
+    <button onclick="generateReviews()">Generate Reviews</button>
+
+    <div id="reviews-container"></div>
+
+    <div id="selected-review-box" style="display: none;">
+      <h3>✅ Selected Review:</h3>
+      <p id="selected-review"></p>
+    </div>
+  </div>
+
+  <script>
+    async function loadProducts() {
+      const category = document.getElementById("category").value;
+      const response = await fetch("/get_products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ category }),
+      });
+      const products = await response.json();
+      const productSelect = document.getElementById("product");
+      productSelect.innerHTML = "<option disabled selected>Choose product</option>";
+      products.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value = p;
+        opt.innerText = p;
+        productSelect.appendChild(opt);
+      });
+    }
+
+    async function generateReviews() {
+      const product = document.getElementById("product").value;
+      if (!product) return alert("Please select a product first.");
+
+      const response = await fetch("/generate_reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ product }),
+      });
+
+      const reviews = await response.json();
+      const container = document.getElementById("reviews-container");
+      container.innerHTML = "<h3>📝 Select a Review:</h3>";
+
+      reviews.forEach((review, idx) => {
+        const btn = document.createElement("button");
+        btn.innerText = `Review ${idx + 1}: ${review}`;
+        btn.onclick = () => selectReview(review);
+        container.appendChild(btn);
+      });
+    }
+
+    function selectReview(review) {
+      document.getElementById("selected-review").innerText = review;
+      document.getElementById("selected-review-box").style.display = "block";
+    }
+  </script>
+</body>
+</html>
